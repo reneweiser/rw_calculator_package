@@ -1,4 +1,6 @@
-export class Input {
+import {Printable} from "./Printable";
+
+export class Input implements Printable {
     private readonly _valuePattern: RegExp = /^\d+\.?\d*$/;
     private readonly _digitPattern: RegExp = /^\d|\.$/;
     private readonly _value: string;
@@ -22,5 +24,9 @@ export class Input {
             return this;
 
         return new Input(`${this._value}${digit}`);
+    }
+
+    toString(): string {
+        return this._value;
     }
 }

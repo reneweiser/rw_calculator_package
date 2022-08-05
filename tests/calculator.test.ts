@@ -1,6 +1,7 @@
 import {Calculator} from "../src/Calculator";
 import {Input} from "../src/Input";
 import {Addition} from "../src/Addition";
+import {Subtraction} from "../src/Subtraction";
 
 describe("a calculator that receives variables and operators as input and evaluates a result", () => {
     it("should receive input values", () => {
@@ -16,15 +17,15 @@ describe("a calculator that receives variables and operators as input and evalua
         expect(calculator.expression).toBe("1 + 1");
     });
 
-    it("should evaluate addition operations", () => {
+    it("should evaluate addition and subtraction operations", () => {
         const calculator = new Calculator();
 
         calculator.addInput(new Input("1"));
         calculator.addOperation(new Addition());
         calculator.addInput(new Input("1"));
-        calculator.addOperation(new Addition());
+        calculator.addOperation(new Subtraction());
         calculator.addInput(new Input("2"));
 
-        expect(calculator.evaluate()).toBe(4);
+        expect(calculator.evaluate()).toBe(0);
     });
 });

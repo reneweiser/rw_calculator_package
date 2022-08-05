@@ -34,3 +34,4 @@ export class Calculator {
         return operation.evaluate(inputA.value, this.evaluateInput(rest));
     }
 }
+

@@ -1,8 +1,17 @@
-import {Operation} from "./Operation";
+import {Evaluable} from "./Evaluable";
+import {Printable} from "./Printable";
 
-export class Multiplication implements Operation {
+export class Multiplication implements Evaluable, Printable {
     evaluate(inputA: number, inputB: number): number {
         return inputA * inputB;
+    }
+
+    toString(): string {
+        return "*";
+    }
+
+    get rank(): 0 | 1 {
+        return 0;
     }
 }
 

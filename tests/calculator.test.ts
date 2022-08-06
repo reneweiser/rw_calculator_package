@@ -42,4 +42,22 @@ describe("a calculator that receives variables and operators as input and evalua
 
         expect(calculator.evaluate()).toBe(3);
     });
+
+    it("should respect order of operations", () => {
+        const calculator = new Calculator();
+
+        calculator.addInput(new Input("3"));
+        calculator.addOperation(new Multiplication());
+        calculator.addInput(new Input("5"));
+        calculator.addOperation(new Division());
+        calculator.addInput(new Input("4"));
+        calculator.addOperation(new Addition());
+        calculator.addInput(new Input("9"));
+        calculator.addOperation(new Subtraction());
+        calculator.addInput(new Input("10"));
+        calculator.addOperation(new Division());
+        calculator.addInput(new Input("5"));
+
+        expect(calculator.evaluate()).toBe(10.75);
+    });
 });

@@ -1,37 +1,40 @@
 import {Input} from "./Input";
-import {Addition} from "./Addition";
-import {Operation} from "./Operation";
+import {Evaluable} from "./Evaluable";
+import {Printable} from "./Printable";
 
 export class Calculator {
-    private readonly _input: (Input|Operation)[] = [];
+    private readonly _input: (Input|Evaluable)[] = [];
 
     get expression() {
-        return this._input.map(item => item.toString()).join(" ");
+        return this._input.map((item: Printable) => item.toString()).join(" ");
     }
 
     public addInput(input: Input): void {
         this._input.push(input);
     }
 
-    public addOperation(addition: Addition): void {
-        this._input.push(addition);
+    public addOperation(operation: Evaluable): void {
+        this._input.push(operation);
     }
 
     public evaluate(): number {
-        return this.evaluateInput(this._input);
+        return this.evaluateRecursive(this._input);
     }
 
-    private evaluateInput(input: (Input|Operation)[]): number {
+    private evaluateRecursive(input: (Input|Evaluable)[]): number {
         if (input.length === 1) {
             const result = input[0] as Input;
             return result.value;
         }
 
-        const inputA: Input = input[0] as Input;
-        const operation: Operation = input[1] as Operation;
-        const rest: (Input|Operation)[] = input.filter((item, index: number) => index > 1);
+        const [, operation] = input as [Input, Evaluable];
 
-        return operation.evaluate(inputA.value, this.evaluateInput(rest));
+        if (operation.rank === 1) {
+            const [a, , ...rest]: [Input, Evaluable, (Input|Evaluable)] = input as [Input, Evaluable, (Input|Evaluable)];
+            return operation.evaluate(a.value, this.evaluateRecursive(rest));
+        }
+
+        const [a, , b, ...rest]: [Input, Evaluable, Input, (Input|Evaluable)] = input as [Input, Evaluable, Input, (Input|Evaluable)];
+        return this.evaluateRecursive([new Input(operation.evaluate(a.value, b.value).toString()), ...rest]);
     }
 }
-

@@ -42,8 +42,7 @@ var Calculator = /** @class */ (function () {
             return operation.evaluate(a_1.value, this.evaluateRecursive(rest_1));
         }
         var _c = input, a = _c[0], b = _c[2], rest = _c.slice(3);
-        var newInput = new Input_1.Input(operation.evaluate(a.value, b.value).toString());
-        return this.evaluateRecursive(__spreadArray([newInput], rest, true));
+        return this.evaluateRecursive(__spreadArray([new Input_1.Input(operation.evaluate(a.value, b.value).toString())], rest, true));
     };
     return Calculator;
 }());

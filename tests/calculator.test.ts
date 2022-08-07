@@ -1,9 +1,9 @@
-import {Calculator} from "../src/Calculator";
-import {Input} from "../src/Input";
-import {Addition} from "../src/Addition";
-import {Subtraction} from "../src/Subtraction";
-import {Multiplication} from "../src/Multiplication";
-import {Division} from "../src/Division";
+import {Calculator} from "../src";
+import {Input} from "../src";
+import {Addition} from "../src";
+import {Subtraction} from "../src";
+import {Multiplication} from "../src";
+import {Division} from "../src";
 
 describe("a calculator that receives variables and operators as input and evaluates a result", () => {
     it("should receive input values", () => {
@@ -21,13 +21,9 @@ describe("a calculator that receives variables and operators as input and evalua
 
     it("should evaluate addition and subtraction operations", () => {
         const calculator = new Calculator();
-
-        calculator.addInput(new Input("1"));
-        calculator.addOperation(new Addition());
-        calculator.addInput(new Input("1"));
+        calculator.addInput(new Input("2"));
         calculator.addOperation(new Subtraction());
         calculator.addInput(new Input("2"));
-
         expect(calculator.evaluate()).toBe(0);
     });
 
@@ -37,9 +33,10 @@ describe("a calculator that receives variables and operators as input and evalua
         calculator.addInput(new Input("2"));
         calculator.addOperation(new Multiplication());
         calculator.addInput(new Input("6"));
+        expect(calculator.evaluate()).toBe(12);
+
         calculator.addOperation(new Division());
         calculator.addInput(new Input("4"));
-
         expect(calculator.evaluate()).toBe(3);
     });
 
@@ -59,5 +56,37 @@ describe("a calculator that receives variables and operators as input and evalua
         calculator.addInput(new Input("5"));
 
         expect(calculator.evaluate()).toBe(10.75);
+    });
+
+    it("should not allow consecutive input of operations", () => {
+        const calculator = new Calculator();
+
+        calculator.addInput(new Input("1"));
+        calculator.addOperation(new Addition());
+        calculator.addOperation(new Addition());
+        calculator.addInput(new Input("1"));
+
+        expect(calculator.expression).toBe("1 + 1");
+    });
+
+    it("should not allow consecutive input of inputs", () => {
+        const calculator = new Calculator();
+
+        calculator.addInput(new Input("1"));
+        calculator.addInput(new Input("1"));
+        calculator.addOperation(new Addition());
+        calculator.addOperation(new Addition());
+        calculator.addInput(new Input("1"));
+
+        expect(calculator.expression).toBe("1 + 1");
+    });
+
+    it("should not allow operators without first adding input", () => {
+        const calculator = new Calculator();
+
+        calculator.addOperation(new Addition());
+        calculator.addInput(new Input("1"));
+
+        expect(calculator.expression).toBe("1");
     });
 });

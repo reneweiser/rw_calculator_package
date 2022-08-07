@@ -34,4 +34,21 @@ describe("an input value for the calculator", () => {
     it("should not be possible to append more than one decimal point", () => {
         expect(new Input("123.1").append(".").value).toBe(123.1);
     });
+
+    it("should trim leading zeros", () => {
+        const decimal = new Input("0")
+            .append("0")
+            .append(".")
+            .append("0")
+            .append("1")
+        expect(decimal.value).toBe(0.01);
+        expect(new Input("0123").value).toBe(123);
+        expect(new Input("00000123.1234").value).toBe(123.1234);
+    });
+
+    it("should allow negative numbers", () => {
+        expect(() => new Input("-1").value).not.toThrow();
+        expect(new Input("-123").value).toBe(-123);
+        expect(new Input("-0.01").value).toBe(-0.01);
+    });
 });

@@ -10,15 +10,28 @@ export class Calculator {
     }
 
     public addInput(input: Input): void {
+        if (this.isLastItemInput())
+            return;
+
+        if (input.isEmpty)
+            return;
+
         this._input.push(input);
     }
 
     public addOperation(operation: Evaluable): void {
+        if (!this.isLastItemInput())
+            return;
+
         this._input.push(operation);
     }
 
     public evaluate(): number {
-        return this.evaluateRecursive(this._input);
+        const result = this.evaluateRecursive(this._input);
+        this._input.splice(0, this._input.length);
+        this._input.push(new Input(result.toString()));
+
+        return result;
     }
 
     private evaluateRecursive(input: (Input|Evaluable)[]): number {
@@ -27,14 +40,23 @@ export class Calculator {
             return result.value;
         }
 
-        const [, operation] = input as [Input, Evaluable];
+        const operation = input[1] as Evaluable;
 
         if (operation.rank === 1) {
-            const [a, , ...rest]: [Input, Evaluable, (Input|Evaluable)] = input as [Input, Evaluable, (Input|Evaluable)];
+            const a: Input = input[0] as Input;
+            const rest: (Input|Evaluable)[] = input.filter((item, index) => index > 1);
+
             return operation.evaluate(a.value, this.evaluateRecursive(rest));
         }
 
-        const [a, , b, ...rest]: [Input, Evaluable, Input, (Input|Evaluable)] = input as [Input, Evaluable, Input, (Input|Evaluable)];
+        const a: Input = input[0] as Input;
+        const b: Input = input[2] as Input;
+        const rest: (Input|Evaluable)[] = input.filter((item, index) => index > 2);
+
         return this.evaluateRecursive([new Input(operation.evaluate(a.value, b.value).toString()), ...rest]);
+    }
+
+    public isLastItemInput(): boolean {
+        return this._input[this._input.length - 1] instanceof Input;
     }
 }

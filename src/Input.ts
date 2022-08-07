@@ -1,7 +1,7 @@
 import {Printable} from "./Printable";
 
 export class Input implements Printable {
-    private readonly _valuePattern: RegExp = /^\d+\.?\d*$/;
+    private readonly _valuePattern: RegExp = /^-?\d+\.?\d*$/;
     private readonly _digitPattern: RegExp = /^\d|\.$/;
     private readonly _value: string;
 
@@ -9,11 +9,15 @@ export class Input implements Printable {
         if (!this._valuePattern.test(value))
             throw new Error(`This value is no valid input: ${value}`);
 
-        this._value = value;
+        this._value = value.replace(/^0(?!\.)(?=\d)/g, '');
     }
 
     get value(): number {
         return parseFloat(this._value);
+    }
+
+    get isEmpty(): boolean {
+        return this._value === '';
     }
 
     append(digit: string): Input {
